@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = parseCookieToken(document.cookie);
+            const emailFromToken = parseJwt(token).email || "User";
+            console.log("email from token ", emailFromToken);
+
+            const getTaskBoardsOfUser = async () => {
+                try {
+                    const taskBoardResponse = await fetch(`/taskboards/${emailFromToken}`, { method: 'GET' });
+
+                    if (taskBoardResponse.ok) {
+                        const data = await taskBoardResponse.json();
+                        console.log("Success:", data.user_tasks);
+                    } else {
+                        console.error("Error fetching taskboards:", taskBoardResponse.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error in fetch:", error);
+                }
+            };
+
+            // Call the function to get taskboards when the page loads
+            getTaskBoardsOfUser();
+        });
+    </script>
+
+
+
+</div>
+{% endblock %}
